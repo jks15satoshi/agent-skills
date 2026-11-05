@@ -1,6 +1,6 @@
 # Agent Skills
 
-[English](README.md) | [简体中文](README.zh-CN.md)
+**English** | [中文（简体）](README.zh-CN.md)
 
 Reusable [Agent Skills](https://agentskills.io) for AI coding agents. Each skill packages a focused workflow and reference material that an agent loads only when the task calls for it.
 

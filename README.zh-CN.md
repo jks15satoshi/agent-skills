@@ -1,6 +1,6 @@
 # Agent Skills
 
-[English](README.md) | [中文（简体）](README.zh-CN.md)
+[English](README.md) | **中文（简体）**
 
 面向 AI 编码代理的可复用 [Agent Skills](https://agentskills.io)。每个技能封装一套聚焦的工作流和参考资料，代理只在任务需要时加载。
 
