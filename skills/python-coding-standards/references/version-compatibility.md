@@ -2,6 +2,8 @@
 
 This file owns the version policy. General code conventions are in [`general-standards.md`](general-standards.md); Ruff configuration is in [`ruff-config.md`](ruff-config.md).
 
+The feature matrix covers every Python version that still receives maintenance support; a project's declared floor may be higher.
+
 Verified on 2026-11-04 against the [Python Developer's Guide status page](https://devguide.python.org/versions/) and the CPython "What's New" documentation.
 
 ## Currently supported versions

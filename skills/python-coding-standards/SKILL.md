@@ -1,6 +1,6 @@
 ---
 name: python-coding-standards
-description: Lint, format, and enforce modern Python coding standards using Ruff, and review naming, typing, structure, testing, docstring, and exception-handling conventions. Use this skill when the user wants to check, format, or refactor Python code, review naming, typing, structure, testing, docstring, or exception-handling conventions, configure Ruff in pyproject.toml, or ensure syntax and typing compatibility for Python 3.11+.
+description: Lint, format, and review Python code with Ruff against modern standards. Use when checking naming, typing, structure, docstrings, exceptions, or testing; configuring Ruff in pyproject.toml; or ensuring Python 3.11+ compatibility.
 compatibility: Requires Python 3.11+ and Ruff. uv is recommended.
 license: MIT
 metadata:
@@ -16,11 +16,11 @@ The shared Ruff rule set and the project's declared minimum Python version are t
 
 ## Workflow
 
-- [ ] Step 1: Determine the minimum supported Python version. Read [`references/python-versions.md`](references/python-versions.md) for the detection order. If no floor is declared, ask; do not guess.
+- [ ] Step 1: Determine the minimum supported Python version. Read [`references/version-compatibility.md`](references/version-compatibility.md) for the detection order. If no floor is declared, ask; do not guess.
 - [ ] Step 2: Merge [`assets/pyproject.ruff-template.toml`](assets/pyproject.ruff-template.toml) into the root `pyproject.toml` without overwriting existing project configuration. Read [`references/ruff-config.md`](references/ruff-config.md) before changing existing Ruff settings.
-- [ ] Step 3: Write code that runs on the minimum version and follows the general standards. Read [`references/general-standards.md`](references/general-standards.md); for syntax and standard-library availability, read [`references/python-versions.md`](references/python-versions.md). If the task touches a project-specific library, framework, or internal API, read [`references/project-specific-standards.md`](references/project-specific-standards.md).
+- [ ] Step 3: Write code that runs on the minimum version and follows the general standards. Read [`references/general-standards.md`](references/general-standards.md); for syntax and standard-library availability, read [`references/version-compatibility.md`](references/version-compatibility.md). If the task touches a project-specific library, framework, or internal API, read [`references/project-specific-standards.md`](references/project-specific-standards.md).
 - [ ] Step 4: Run Ruff and fix violations — see the commands below.
-- [ ] Step 5: Verify the supported version range. Read [`references/python-versions.md`](references/python-versions.md) for the test matrix.
+- [ ] Step 5: Verify the supported version range. Read [`references/version-compatibility.md`](references/version-compatibility.md) for the test matrix.
 
 ### Run Ruff
 
@@ -99,7 +99,7 @@ Before finishing:
 | File | Contents | Read when |
 | --- | --- | --- |
 | [`general-standards.md`](references/general-standards.md) | module organization, comprehensions, naming, type annotations, functions and data, docstrings, exception handling, testing, security and logging | writing or reviewing code, or naming new APIs |
-| [`python-versions.md`](references/python-versions.md) | support matrix, baseline detection, compatibility patterns, end of life | choosing syntax or APIs, or setting the floor |
+| [`version-compatibility.md`](references/version-compatibility.md) | support matrix, baseline detection, compatibility patterns, end of life | choosing syntax or APIs, or setting the floor |
 | [`ruff-config.md`](references/ruff-config.md) | rule set map, target version, per-file ignores, template adoption | configuring or troubleshooting Ruff |
 | [`project-specific-standards.md`](references/project-specific-standards.md) | placeholder for project-specific conventions; add the project's rules here | a task touches a project-specific library, framework, or internal API |
 | [`pyproject.ruff-template.toml`](assets/pyproject.ruff-template.toml) | canonical Ruff rule set | merging or reviewing configuration |

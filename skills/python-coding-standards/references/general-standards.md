@@ -1,6 +1,6 @@
 # General Standards
 
-These are the shared standards. Rules with a Ruff code are enforced by the configuration in [`../assets/pyproject.ruff-template.toml`](../assets/pyproject.ruff-template.toml); conventions without a rule code are review guidance. The full rule-family map and configuration details are in [`ruff-config.md`](ruff-config.md); version-specific syntax and API rules are in [`python-versions.md`](python-versions.md). If this summary and the configuration disagree, the configuration wins.
+These are the shared standards. Rules with a Ruff code are enforced by the configuration in [`../assets/pyproject.ruff-template.toml`](../assets/pyproject.ruff-template.toml); conventions without a rule code are review guidance. The full rule-family map and configuration details are in [`ruff-config.md`](ruff-config.md); version-specific syntax and API rules are in [`version-compatibility.md`](version-compatibility.md). If this summary and the configuration disagree, the configuration wins.
 
 ## Module Organization and Imports
 
@@ -12,7 +12,7 @@ These are the shared standards. Rules with a Ruff code are enforced by the confi
 - Keep imports at module top (`E402`, `PLC0415`). A function-level import is allowed only for a circular or optional dependency and needs `# noqa: PLC0415` with the reason. Do not use wildcard imports (`F403`).
 - If a module-level class shadows an imported class it subclasses or wraps, prefer `import module` and qualify (`pathlib.Path`); when an alias is necessary, use a private `_Base` prefix (`from pathlib import Path as _BasePath`).
 - Use `pathlib` instead of `os.path` for path manipulation (`PTH`), and prefer `Path.open()` over the built-in `open()` (`PTH123`).
-- Pass `encoding=` explicitly for text I/O when the supported floor is below 3.15; see [`python-versions.md`](python-versions.md). `PLW1514` is preview, so this is review guidance.
+- Pass `encoding=` explicitly for text I/O when the supported floor is below 3.15; see [`version-compatibility.md`](version-compatibility.md). `PLW1514` is preview, so this is review guidance.
 - For a long module with distinct logical sections, a separator comment with a short noun phrase is acceptable; use it sparingly and keep it within the line limit:
 
 ```python
@@ -74,7 +74,7 @@ user_names = {uid: u.name for uid, u in users_by_id.items()}
 
 - Annotate every function parameter and return value (`ANN`); `self` and `cls` are exempt. Annotate class attributes and empty-container initializations (`items: list[str] = []`).
 - Use built-in generics (`list[str]`, `dict[str, int]`) and PEP 604 unions (`X | Y`); do not use `Optional`, `Union`, `typing.List`, or `typing.Dict` (`UP006`, `UP007`, `UP035`, `UP045`). Always parameterize containers and generics (`Callable[[int], str]`).
-- On Python 3.12+, use PEP 695 generics and type aliases (`class Box[T]: ...`, `def first[T](...): ...`, `type IntList = list[int]`) (`UP040`, `UP046`, `UP047`). On 3.11, use `TypeVar`, `Generic`, and `TypeAlias`; see [`python-versions.md`](python-versions.md).
+- On Python 3.12+, use PEP 695 generics and type aliases (`class Box[T]: ...`, `def first[T](...): ...`, `type IntList = list[int]`) (`UP040`, `UP046`, `UP047`). On 3.11, use `TypeVar`, `Generic`, and `TypeAlias`; see [`version-compatibility.md`](version-compatibility.md).
 - Prefer precise types over `Any`: use `object` when any value is acceptable, or a `Protocol` when behavior is expected. `ANN401` rejects `Any` in function signatures.
 - Use `ClassVar[T]` for mutable class-level state (`RUF012`) and non-field attributes in dataclasses. Use `Final[T]` for constants that must not be rebound.
 - A method returning its own instance annotates `-> Self`, including fluent setters and `__enter__`.
