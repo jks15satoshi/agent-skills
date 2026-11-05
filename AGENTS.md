@@ -15,13 +15,14 @@ Work in this order:
 2. **Draft the workflow.** Make `SKILL.md` a path to a correct result: when to use the skill, the steps in order, the commands to run, and the failure modes worth calling out. Write in the imperative, explain why non-obvious rules exist, and preserve the existing structure and voice when editing.
 3. **Push detail down.** Keep `SKILL.md` focused (aim for under 500 lines). Put reference material in `references/` and link each file from `SKILL.md` with a "read when" condition; put templates in `assets/` and deterministic helpers in `scripts/`.
 4. **Keep it self-contained.** Every file the skill references must live inside its own directory. Clients install skills individually, so links outside the directory break.
-5. **Test behavior changes.** Use two or three realistic prompts and compare against a baseline: without the skill for a new skill, or the previous version for an existing skill. Keep evaluation workspaces out of the repository.
-6. **Validate.** Run the validator for every changed skill and fix every reported problem:
+5. **Bundle the license.** Copy `LICENSE` into the skill directory and set the `license` field in the frontmatter to match. Clients copy skills out of this repository, so a license file outside the skill directory does not travel with the installed skill.
+6. **Test behavior changes.** Use two or three realistic prompts and compare against a baseline: without the skill for a new skill, or the previous version for an existing skill. Keep evaluation workspaces out of the repository.
+7. **Validate.** Run the validator for every changed skill and fix every reported problem:
 
 ```bash
 uvx --from skills-ref agentskills validate ./skills/<skill-name>
 ```
 
-The `skills-ref` package installs the executable as `agentskills`, not `skills-ref`.
+Replace `<skill-name>` with each skill directory you changed. The `skills-ref` package installs the executable as `agentskills`, not `skills-ref`.
 
 A skill is done only when validation passes.

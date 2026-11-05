@@ -105,4 +105,4 @@ Each skill lives under `skills/<name>/SKILL.md`. Read [`AGENTS.md`](AGENTS.md) b
 
 ## License
 
-The license of an individual skill can be found directly inside the skill's directory inside the LICENSE file.
+This repository is licensed under the [MIT License](LICENSE). Each skill also bundles a copy in its own directory, so the license travels with the skill when it is installed individually. If a skill ever carries a different license, the `LICENSE` file in that skill's directory takes precedence.
