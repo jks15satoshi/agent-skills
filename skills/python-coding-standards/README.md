@@ -114,4 +114,4 @@ uv run ruff format --check path/to/touched_file.py
 
 ## License
 
-Released under the [MIT License](../../LICENSE).
+This Agent Skill is licensed under the [MIT License](../../LICENSE).
