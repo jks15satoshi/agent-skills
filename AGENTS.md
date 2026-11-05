@@ -1,20 +1,28 @@
 # AGENTS.md
 
-## Skills
+## Writing skills
 
-When creating, editing or reviewing skills, follow the Agent Skills "For skill creators" documentation: 
+Read the relevant Agent Skills "For skill creators" page before starting:
 
 - [Best practices for skill creators](https://agentskills.io/skill-creation/best-practices)
 - [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)
 - [Evaluating skill output quality](https://agentskills.io/skill-creation/evaluating-skills)
 - [Using scripts in skills](https://agentskills.io/skill-creation/using-scripts)
 
-Place each skill at `skills/<name>/SKILL.md` so the Skills CLI and other Agent Skills clients can discover it.
+Work in this order:
 
-Validate skills after every change with [skills-ref](https://agentskills.io/specification#validation) and fix all reported problems before finishing:
+1. **Write the trigger.** In the frontmatter, set `name` to the skill directory name. In `description`, state what the skill does and when to use it, using the concrete tasks and terms a user would type. The description is the only part loaded before the skill, so make it specific.
+2. **Draft the workflow.** Make `SKILL.md` a path to a correct result: when to use the skill, the steps in order, the commands to run, and the failure modes worth calling out. Write in the imperative, explain why non-obvious rules exist, and preserve the existing structure and voice when editing.
+3. **Push detail down.** Keep `SKILL.md` focused (aim for under 500 lines). Put reference material in `references/` and link each file from `SKILL.md` with a "read when" condition; put templates in `assets/` and deterministic helpers in `scripts/`.
+4. **Keep it self-contained.** Every file the skill references must live inside its own directory. Clients install skills individually, so links outside the directory break.
+5. **Bundle the license.** Copy `LICENSE` into the skill directory and set the `license` field in the frontmatter to match. Clients copy skills out of this repository, so a license file outside the skill directory does not travel with the installed skill.
+6. **Test behavior changes.** Use two or three realistic prompts and compare against a baseline: without the skill for a new skill, or the previous version for an existing skill. Keep evaluation workspaces out of the repository.
+7. **Validate.** Run the validator for every changed skill and fix every reported problem:
 
 ```bash
 uvx --from skills-ref agentskills validate ./skills/<skill-name>
 ```
 
-Replace `<skill-name>` with the directory of each skill you changed. A skill is done only when validation passes. The `skills-ref` package installs the executable as `agentskills`, not `skills-ref`.
+Replace `<skill-name>` with each skill directory you changed. The `skills-ref` package installs the executable as `agentskills`, not `skills-ref`.
+
+A skill is done only when validation passes.
