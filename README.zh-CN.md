@@ -105,4 +105,4 @@ uvx add-skills . --list
 
 ## 许可证
 
-本项目采用 [MIT License](LICENSE) 许可。
+各个技能的许可证可直接在该技能目录内的 LICENSE 文件中找到。
