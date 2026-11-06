@@ -14,7 +14,7 @@ Reusable [Agent Skills](https://agentskills.io) for AI coding agents. Each skill
 
 ### Skills CLI
 
-Install with the [Skills CLI](https://github.com/vercel-labs/skills) (Node.js 22.20+). It detects installed clients and copies each skill into the right directory:
+Install with the [Skills CLI](https://github.com/vercel-labs/skills) (Node.js 22.20+). It detects installed clients and installs each skill into the right directory:
 
 ```bash
 # Install into the current project
@@ -28,27 +28,6 @@ npx skills add jks15satoshi/agent-skills --list
 ```
 
 Pass `-a <agent>` to target a specific client (and `-y` to skip confirmation prompts). Agent IDs and native skill directories are listed in the [supported agents](https://github.com/vercel-labs/skills/blob/main/docs/agents.md) table.
-
-### Python with uv
-
-[`add-skills`](https://github.com/ludo-technologies/add-skills) is a community, Python-native CLI. Run it with `uvx` without installing it:
-
-```bash
-# List the skills available in this repository
-uvx add-skills jks15satoshi/agent-skills --list
-
-# Install into the current project
-uvx add-skills jks15satoshi/agent-skills \
-  --skill python-coding-standards \
-  -a <agent>
-
-# Install globally
-uvx add-skills jks15satoshi/agent-skills \
-  --skill python-coding-standards \
-  -g -a <agent>
-```
-
-`add-skills` defaults `--agent` to `claude-code`; pass `-a <agent>` explicitly to install for another client. See the tool's [supported agents](https://github.com/ludo-technologies/add-skills#supported-agents) for IDs. `add-skills` is not maintained by the Agent Skills project; review the tool before using it in a sensitive environment.
 
 ### Manual installation
 
@@ -74,6 +53,42 @@ The `.agents/skills/` location is described in the [Agent Skills implementation 
 
 Keep the skill directory name unchanged: agents use it as the skill name.
 
+## Updating
+
+The Skills CLI records where each skill came from, so you can update in place:
+
+```bash
+# Check whether any installed skill has an update
+npx skills check
+
+# Update one skill, or every installed skill
+npx skills update <skill>
+npx skills update
+
+# Limit the update to global or project scope
+npx skills update -g <skill>
+npx skills update -p <skill>
+```
+
+`npx skills check` exits with a non-zero status when an update is available, so it can gate CI.
+
+If you installed manually, update the clone and replace the skill directory:
+
+```bash
+git -C /path/to/agent-skills pull
+rm -rf ~/.agents/skills/<skill>
+cp -R /path/to/agent-skills/skills/<skill> ~/.agents/skills/
+```
+
+To avoid repeating the copy, link the clone instead:
+
+```bash
+ln -sfn /path/to/agent-skills/skills/<skill> \
+  ~/.agents/skills/<skill>
+```
+
+Updates replace the skill directory. Keep any project-specific customizations outside the installed skill.
+
 ## Usage
 
 Agents load a skill on demand based on its `description`. Ask for a matching task, or name the skill explicitly:
@@ -96,7 +111,6 @@ Verify that the CLI tools discover the skill:
 
 ```bash
 npx -y skills@latest add . --list
-uvx add-skills . --list
 ```
 
 ## Contributing

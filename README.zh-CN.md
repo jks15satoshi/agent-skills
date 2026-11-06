@@ -14,7 +14,7 @@
 
 ### Skills CLI
 
-使用 [Skills CLI](https://github.com/vercel-labs/skills) 安装（需要 Node.js 22.20+）。它会检测已安装的客户端，并把每个技能复制到正确的目录：
+使用 [Skills CLI](https://github.com/vercel-labs/skills) 安装（需要 Node.js 22.20+）。它会检测已安装的客户端，并把每个技能安装到正确的目录：
 
 ```bash
 # 安装到当前项目
@@ -28,27 +28,6 @@ npx skills add jks15satoshi/agent-skills --list
 ```
 
 使用 `-a <agent>` 指定客户端（并用 `-y` 跳过确认提示）。各客户端的 Agent ID 和原生技能目录见[支持的客户端](https://github.com/vercel-labs/skills/blob/main/docs/agents.md)表。
-
-### Python 与 uv
-
-[`add-skills`](https://github.com/ludo-technologies/add-skills) 是一个社区维护的 Python 原生 CLI。用 `uvx` 运行它，无需预先安装：
-
-```bash
-# 列出本仓库中可用的技能
-uvx add-skills jks15satoshi/agent-skills --list
-
-# 安装到当前项目
-uvx add-skills jks15satoshi/agent-skills \
-  --skill python-coding-standards \
-  -a <agent>
-
-# 全局安装
-uvx add-skills jks15satoshi/agent-skills \
-  --skill python-coding-standards \
-  -g -a <agent>
-```
-
-`add-skills` 的 `--agent` 默认值为 `claude-code`；要为其他客户端安装，请显式传入 `-a <agent>`。客户端 ID 见该工具的[支持的客户端](https://github.com/ludo-technologies/add-skills#supported-agents)。`add-skills` 并非由 Agent Skills 项目维护；在敏感环境中使用前请先审查该工具。
 
 ### 手动安装
 
@@ -74,6 +53,42 @@ cp -R /path/to/agent-skills/skills/python-coding-standards .agents/skills/
 
 保持技能目录名不变：代理会把目录名用作技能名。
 
+## 更新
+
+Skills CLI 会记录每个技能的来源，可以直接原地更新：
+
+```bash
+# 检查是否有更新
+npx skills check
+
+# 更新指定技能或全部技能
+npx skills update <skill>
+npx skills update
+
+# 限定全局或项目范围
+npx skills update -g <skill>
+npx skills update -p <skill>
+```
+
+`npx skills check` 发现更新时会返回非零退出码，可用于 CI。
+
+手动安装时，先更新克隆，再替换技能目录：
+
+```bash
+git -C /path/to/agent-skills pull
+rm -rf ~/.agents/skills/<skill>
+cp -R /path/to/agent-skills/skills/<skill> ~/.agents/skills/
+```
+
+如果不想每次复制，可以改成符号链接：
+
+```bash
+ln -sfn /path/to/agent-skills/skills/<skill> \
+  ~/.agents/skills/<skill>
+```
+
+更新只会替换技能目录。项目自定义内容应放在项目内，不要放进已安装的 skill。
+
 ## 使用
 
 代理会根据技能的 `description` 按需加载。发起匹配的任务，或显式点名该技能：
@@ -96,7 +111,6 @@ uvx --from skills-ref agentskills validate ./skills/python-coding-standards
 
 ```bash
 npx -y skills@latest add . --list
-uvx add-skills . --list
 ```
 
 ## 贡献
