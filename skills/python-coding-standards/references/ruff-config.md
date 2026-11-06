@@ -143,7 +143,7 @@ The template uses the Google convention:
 convention = "google"
 ```
 
-`D104`, `D105`, `D107`, and `D415` are ignored globally. `D415` is ignored because it accepts only ASCII `.`, `?`, and `!`; non-English punctuation such as `。` or `？` would fail. Terminal punctuation is review guidance. `D400` and `D401` are disabled by the Google convention, so declarative first lines are allowed. `D417` checks completeness only when a docstring contains an `Args` section, and it recognizes the English header; keep section headers in English. Attribute docstrings are not checked by Ruff; `Attributes:` is the portable default. Docstring content language is determined by the project, not by this configuration.
+`D104`, `D105`, `D107`, and `D415` are ignored globally. `D415` is ignored because it accepts only ASCII `.`, `?`, and `!`; non-English punctuation such as `。` or `？` would fail. Terminal punctuation is review guidance. `D400` and `D401` are disabled by the Google convention, so declarative first lines are allowed. `D417` checks completeness only when a docstring contains an `Args` section, and it recognizes the English header; keep section headers in English. Attribute docstrings are not checked by Ruff; per-field docs are preferred for `@dataclass` where tooling reads them, while `Attributes:` is the portable fallback for all three data-class types. Keep one style per project. Docstring content language is determined by the project, not by this configuration.
 
 ## Exception handling
 

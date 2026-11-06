@@ -15,11 +15,11 @@ These are the shared standards. Rules with a Ruff code are enforced by the confi
 - Pass `encoding=` explicitly for text I/O when the supported floor is below 3.15; see [`version-compatibility.md`](version-compatibility.md). `PLW1514` is preview, so this is review guidance.
 - For a long module with distinct logical sections, a separator comment with a short noun phrase is acceptable; use it sparingly and keep it within the line limit:
 
-```python
-# ===================================================================================
-# Section topic
-# ===================================================================================
-```
+  ```python
+  # ===================================================================================
+  # Section topic
+  # ===================================================================================
+  ```
 
 ## Naming
 
@@ -43,24 +43,25 @@ PEP 8 covers casing; these defaults cover the semantic choices Ruff cannot check
   - **Structural fallback**: Fall back to full role nouns (`key, value`, `item`, `index`) only when operating on abstract or generic containers lacking domain entities.
   - **Compact shorthand**: Restrict single-letter abbreviations (`k, v`, `i, j`, `x, y`) strictly to obvious micro-scopes, such as single-line comprehensions (`{k: str(v) for k, v in data.items()}`), pure arithmetic lambdas (`lambda x, y: x + y`), or simple counting indices. Do not use single-letter variables in multi-line business logic.
 
-```python
-# Bad: single-letter or generic names in multi-line business logic
-for k, v in users_by_id.items():
-    send_notification(k, v.email)
+  ```python
+  # Bad: single-letter or generic names in multi-line business logic
+  for k, v in users_by_id.items():
+      send_notification(k, v.email)
 
-# Good: domain-specific semantic unpacking (preferred)
-for user_id, profile in users_by_id.items():
-    send_notification(user_id, profile.email)
+  # Good: domain-specific semantic unpacking (preferred)
+  for user_id, profile in users_by_id.items():
+      send_notification(user_id, profile.email)
 
-# Good: compact shorthand strictly in a single-line micro-scope
-user_names = {uid: u.name for uid, u in users_by_id.items()}
-```
+  # Good: compact shorthand strictly in a single-line micro-scope
+  user_names = {uid: u.name for uid, u in users_by_id.items()}
+  ```
 
 ### Functions, Methods, and Converters
 - Use verb phrases (`load_config`). Avoid bare `handle`/`process` without an object (`process_payment`).
 - Alternate constructors use `from_*`; other factories use `create_*`, `build_*`, or `make_*`.
 - Properties use a noun or adjective (`size`, `is_empty`). Conversion helpers use `to_*` (new value) or `as_*` (view/cast).
-- Functions returning iterators or generators use `iter_*` (`iter_users`, `iter_events`). Do not use `iterate_*`.
+- Functions returning iterators or generators use `iter_*` or `iterate_*` for generic iteration; prefer `iter_*` when the project has no convention, and use a specific semantic name (`stream_*`, etc.) when one applies.
+- Keep one generic form across the project, except when following a standard library or third-party API's naming.
 - Do not add `async_` to async functions by default. When providing paired sync/async functions or methods, prefix both with `sync_` and `async_` (`sync_fetch`/`async_fetch`, `sync_iter_users`/`async_iter_users`).
 
 ### Classes, Mixins, and Types
@@ -86,19 +87,49 @@ user_names = {uid: u.name for uid, u in users_by_id.items()}
 
 ### Function Design
 - Keep each function at one level of abstraction; extract helpers instead of deep nesting, and use guard clauses/early returns (`RET505`–`RET508`).
+- Use a single blank line inside a function or method body only when the body is long enough to have distinct phases (roughly 20 lines or more), such as validation, the main computation, and result assembly. Keep short functions compact; do not insert blank lines between individual statements. If a function needs several such separators, extract a helper instead; `ruff format` collapses consecutive blank lines inside a body to one.
+
+  ```python
+  # Good: a long body uses single blank lines between major phases
+  def aggregate_metrics(events: list[Event], *, window_seconds: int) -> Metrics:
+      if window_seconds <= 0:
+          raise ValueError("window_seconds must be positive")
+
+      buckets: dict[int, list[Event]] = {}
+      for event in events:
+          bucket = int(event.timestamp) // window_seconds
+          buckets.setdefault(bucket, []).append(event)
+
+      counts = {bucket: len(items) for bucket, items in buckets.items()}
+      durations = {
+          bucket: sum(event.duration_ms for event in items)
+          for bucket, items in buckets.items()
+      }
+      peak = max(counts.values(), default=0)
+      total = sum(durations.values())
+
+      return Metrics(
+          counts=counts,
+          durations=durations,
+          peak=peak,
+          total=total,
+      )
+  ```
+
 - Make boolean parameters keyword-only with `*`; do the same when several parameters are optional (`FBT001`, `FBT002`). Do not hide a public API signature behind `**kwargs` (decorators and forwarding are exempt). When parameters form a cohesive group or no longer fit on one line, introduce a dataclass, `TypedDict`, or `NamedTuple` parameter object.
+
+  ```python
+  # Bad: positional boolean arguments obscure meaning at call site (FBT001)
+  def render(text: str, cache: bool = True, strip: bool = False) -> str: ...
+  render("hello", True, False)
+
+  # Good: keyword-only boolean parameters (*) ensure call-site clarity
+  def render(text: str, *, cache: bool = True, strip: bool = False) -> str: ...
+  render("hello", cache=True, strip=False)
+  ```
+
 - Never use a mutable object as a default value; use `field(default_factory=...)` or a `None` sentinel created inside the function (`B006`, `RUF012`).
 - Do not return results through mutable arguments, pass state through `global`, or perform I/O in the middle of a computation. Use `nonlocal` only for closure-local state, and keep input/output at the boundary (`PLW0603`).
-
-```python
-# Bad: positional boolean arguments obscure meaning at call site (FBT001)
-def render(text: str, cache: bool = True, strip: bool = False) -> str: ...
-render("hello", True, False)
-
-# Good: keyword-only boolean parameters (*) ensure call-site clarity
-def render(text: str, *, cache: bool = True, strip: bool = False) -> str: ...
-render("hello", cache=True, strip=False)
-```
 
 ### Async
 - Do not run blocking I/O or CPU-bound work inside an `async def`; offload it with `asyncio.to_thread` or an executor (`ASYNC`).
@@ -139,14 +170,14 @@ for group in groups:
 
 ## Docstrings and Comments
 
+### Docstrings
+
 - Use the Google docstring convention (`D`) for public modules, classes, methods, and functions; internal APIs may use a concise summary. Package docstrings (`D104`), magic methods (`D105`), and `__init__` (`D107`) are exempt.
 - Structure docstrings with a one-line summary, a blank line, and sections in order: `Args`, `Returns`, `Yields`, `Raises`, `Attributes`.
 - In `Args`, list parameters in signature order using `name (type[, optional]):`; state defaults in the description. In `Attributes`, use `name (type):` and omit the type when the annotation is adjacent.
 - For `Returns`, `Yields`, and `Raises`, the type is the first line with the description indented below. Use `Yields` for generators; omit `Returns` when returning `None`.
-- For `@dataclass`, `TypedDict`, and `NamedTuple`, document fields in the class docstring's `Attributes:` section, or use PEP 258 attribute docstrings below each field if tooling supports it. Do not mix styles in the same class.
+- For `@dataclass`, `TypedDict`, and `NamedTuple`, prefer a per-field PEP 258 docstring where the project's tooling reads it (typically `@dataclass`); an `Attributes:` section is also acceptable. Keep one style per project.
 - Write docstrings in either imperative mood (PEP 257 default: "Fetch users...") or declarative sentences ("Fetches users..."), keeping the choice consistent across the project; end sentences with punctuation in the document's language and keep section headers in English.
-- Use comments only for non-obvious constraints, trade-offs, upstream defects, and reference links. Do not narrate what the code does or restate annotations.
-- Delete commented-out code (`ERA`), stale comments, and ownerless `TODO`/`FIXME` markers.
 
 ```python
 def fetch_users(query: str, *, limit: int = 100) -> list[User]:
@@ -168,33 +199,53 @@ def fetch_users(query: str, *, limit: int = 100) -> list[User]:
     """
 ```
 
+```python
+# Good: document each data-class field next to its definition
+@dataclass(frozen=True, slots=True)
+class RetryPolicy:
+    """Configure retry behavior for outbound requests."""
+
+    max_attempts: int = 3
+    """Maximum number of attempts, including the first."""
+    base_delay_seconds: float = 0.5
+    """Initial delay before the first retry."""
+    max_delay_seconds: float = 30.0
+    """Upper bound for the exponential backoff delay."""
+```
+
+### Comments
+
+- Use comments only for non-obvious constraints, trade-offs, upstream defects, and reference links. Do not narrate what the code does or restate annotations.
+- Delete commented-out code (`ERA`), stale comments, and ownerless `TODO`/`FIXME` markers.
+
 ## Exception Handling
 
 - Catch specific exceptions; bare `except:` is forbidden (`E722`). `except Exception`/`BaseException` is permitted only at process boundaries (CLI, server middleware, worker loop) and must log the traceback (`TRY400`) or re-raise (`BLE001`).
 - Never swallow exceptions silently (`S110`, `S112`). Translate with `raise NewError(...) from exc` (`B904`).
 - For intentional, safe-to-ignore exceptions, use `with contextlib.suppress(SpecificError):` containing only the raising statement. Never suppress `Exception` or `BaseException`.
 - Keep `try` blocks minimal: place only the raising call inside `try`; move validations and early raises before it (`TRY301`), and returns to `else:` (`TRY300`). Manage resources with `with`/`async with`.
+
+  ```python
+  # Bad: giant try block, broad catch, and lost traceback
+  try:
+      raw = fetch_payload(url)
+      parsed = json.loads(raw)
+      return save_to_db(parsed)
+  except Exception:
+      raise DatabaseError("Save failed")
+
+  # Good: minimal try, specific catch, else return, and chained exception
+  raw = fetch_payload(url)
+  try:
+      parsed = json.loads(raw)
+  except json.JSONDecodeError as exc:
+      raise PayloadFormatError(f"Malformed json from {url}") from exc
+  else:
+      return save_to_db(parsed)
+  ```
+
 - Raise project-specific exception types for errors callers should handle; do not leak raw `KeyError` or `AttributeError`. Keep secrets and tokens out of exception messages and logs.
 - Do not use `assert` for input validation (`S101`); raise `ValueError` or `TypeError`. Use `assert` only for genuine internal invariants with `# noqa: S101` and a reason.
-
-```python
-# Bad: giant try block, broad catch, and lost traceback
-try:
-    raw = fetch_payload(url)
-    parsed = json.loads(raw)
-    return save_to_db(parsed)
-except Exception:
-    raise DatabaseError("Save failed")
-
-# Good: minimal try, specific catch, else return, and chained exception
-raw = fetch_payload(url)
-try:
-    parsed = json.loads(raw)
-except json.JSONDecodeError as exc:
-    raise PayloadFormatError(f"Malformed json from {url}") from exc
-else:
-    return save_to_db(parsed)
-```
 
 ## Testing
 
