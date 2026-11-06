@@ -121,4 +121,6 @@ Each skill lives under `skills/<name>/SKILL.md`. Read [`AGENTS.md`](AGENTS.md) b
 
 ## License
 
-This repository is licensed under the [MIT License](LICENSE). Each skill also bundles a copy in its own directory, so the license travels with the skill when it is installed individually. If a skill ever carries a different license, the `LICENSE` file in that skill's directory takes precedence.
+This repository is licensed under the [MIT License](LICENSE).
+
+Each skill also bundles a copy in its own directory, so the license travels with the skill when it is installed individually. If a skill ever carries a different license, the `LICENSE` file in that skill's directory takes precedence.
