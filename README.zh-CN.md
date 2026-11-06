@@ -6,9 +6,11 @@
 
 ## 技能
 
-| 技能 | 描述 |
-| --- | --- |
-| [`python-coding-standards`](skills/python-coding-standards/) | 使用 Ruff 和一套共享的现代 Python 规范来检查、格式化并审查 Python 代码。需要 Python 3.11+ 和 Ruff。 |
+| 技能 | 版本 | 描述 |
+| --- | --- | --- |
+| [`python-coding-standards`](skills/python-coding-standards/) | [1.1.0](skills/python-coding-standards/CHANGELOG.md) | 使用 Ruff 和一套共享的现代 Python 规范来检查、格式化并审查 Python 代码。需要 Python 3.11+ 和 Ruff。 |
+
+每个技能独立遵循 SemVer。点击版本查看该技能的变更日志；发布标签为 `<skill>-v<version>`。
 
 ## 安装
 

@@ -6,9 +6,11 @@ Reusable [Agent Skills](https://agentskills.io) for AI coding agents. Each skill
 
 ## Skills
 
-| Skill | Description |
-| --- | --- |
-| [`python-coding-standards`](skills/python-coding-standards/) | Lint, format, and review Python code with Ruff and a shared set of modern Python conventions. Requires Python 3.11+ and Ruff. |
+| Skill | Version | Description |
+| --- | --- | --- |
+| [`python-coding-standards`](skills/python-coding-standards/) | [1.1.0](skills/python-coding-standards/CHANGELOG.md) | Lint, format, and review Python code with Ruff and a shared set of modern Python conventions. Requires Python 3.11+ and Ruff. |
+
+Each skill follows SemVer independently. Select a version to read that skill's changelog; releases are tagged `<skill>-v<version>`.
 
 ## Installation
 
