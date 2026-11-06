@@ -43,18 +43,18 @@ PEP 8 covers casing; these defaults cover the semantic choices Ruff cannot check
   - **Structural fallback**: Fall back to full role nouns (`key, value`, `item`, `index`) only when operating on abstract or generic containers lacking domain entities.
   - **Compact shorthand**: Restrict single-letter abbreviations (`k, v`, `i, j`, `x, y`) strictly to obvious micro-scopes, such as single-line comprehensions (`{k: str(v) for k, v in data.items()}`), pure arithmetic lambdas (`lambda x, y: x + y`), or simple counting indices. Do not use single-letter variables in multi-line business logic.
 
-  ```python
-  # Bad: single-letter or generic names in multi-line business logic
-  for k, v in users_by_id.items():
-      send_notification(k, v.email)
+```python
+# Bad: single-letter or generic names in multi-line business logic
+for k, v in users_by_id.items():
+    send_notification(k, v.email)
 
-  # Good: domain-specific semantic unpacking (preferred)
-  for user_id, profile in users_by_id.items():
-      send_notification(user_id, profile.email)
+# Good: domain-specific semantic unpacking (preferred)
+for user_id, profile in users_by_id.items():
+    send_notification(user_id, profile.email)
 
-  # Good: compact shorthand strictly in a single-line micro-scope
-  user_names = {uid: u.name for uid, u in users_by_id.items()}
-  ```
+# Good: compact shorthand strictly in a single-line micro-scope
+user_names = {uid: u.name for uid, u in users_by_id.items()}
+```
 
 ### Functions, Methods, and Converters
 - Use verb phrases (`load_config`). Avoid bare `handle`/`process` without an object (`process_payment`).
@@ -87,7 +87,7 @@ PEP 8 covers casing; these defaults cover the semantic choices Ruff cannot check
 
 ### Function Design
 - Keep each function at one level of abstraction; extract helpers instead of deep nesting, and use guard clauses/early returns (`RET505`–`RET508`).
-- Use a single blank line inside a function or method body only when the body is long enough to have distinct phases (roughly 20 lines or more), such as validation, the main computation, and result assembly. Keep short functions compact; do not insert blank lines between individual statements. If a function needs several such separators, extract a helper instead; `ruff format` collapses consecutive blank lines inside a body to one.
+- Use a single blank line inside a function or method body only when the body is long enough to have distinct phases (roughly 20 lines or more), such as validation, the main computation, and result assembly. Keep short functions compact; do not insert blank lines between individual statements. `ruff format` collapses consecutive blank lines inside a body to one.
 
   ```python
   # Good: a long body uses single blank lines between major phases
@@ -224,28 +224,27 @@ class RetryPolicy:
 - Never swallow exceptions silently (`S110`, `S112`). Translate with `raise NewError(...) from exc` (`B904`).
 - For intentional, safe-to-ignore exceptions, use `with contextlib.suppress(SpecificError):` containing only the raising statement. Never suppress `Exception` or `BaseException`.
 - Keep `try` blocks minimal: place only the raising call inside `try`; move validations and early raises before it (`TRY301`), and returns to `else:` (`TRY300`). Manage resources with `with`/`async with`.
-
-  ```python
-  # Bad: giant try block, broad catch, and lost traceback
-  try:
-      raw = fetch_payload(url)
-      parsed = json.loads(raw)
-      return save_to_db(parsed)
-  except Exception:
-      raise DatabaseError("Save failed")
-
-  # Good: minimal try, specific catch, else return, and chained exception
-  raw = fetch_payload(url)
-  try:
-      parsed = json.loads(raw)
-  except json.JSONDecodeError as exc:
-      raise PayloadFormatError(f"Malformed json from {url}") from exc
-  else:
-      return save_to_db(parsed)
-  ```
-
 - Raise project-specific exception types for errors callers should handle; do not leak raw `KeyError` or `AttributeError`. Keep secrets and tokens out of exception messages and logs.
 - Do not use `assert` for input validation (`S101`); raise `ValueError` or `TypeError`. Use `assert` only for genuine internal invariants with `# noqa: S101` and a reason.
+
+```python
+# Bad: giant try block, broad catch, and lost traceback
+try:
+    raw = fetch_payload(url)
+    parsed = json.loads(raw)
+    return save_to_db(parsed)
+except Exception:
+    raise DatabaseError("Save failed")
+
+# Good: minimal try, specific catch, else return, and chained exception
+raw = fetch_payload(url)
+try:
+    parsed = json.loads(raw)
+except json.JSONDecodeError as exc:
+    raise PayloadFormatError(f"Malformed json from {url}") from exc
+else:
+    return save_to_db(parsed)
+```
 
 ## Testing
 

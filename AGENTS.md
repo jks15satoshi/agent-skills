@@ -27,6 +27,14 @@ Replace `<skill-name>` with each skill directory you changed. The `skills-ref` p
 
 A skill is done only when validation passes.
 
+## Local skill discovery
+
+`.agents/skills/python-coding-standards` is a symlink to `../../skills/python-coding-standards`, so agents working in this repository discover the skill through the cross-client `.agents/skills/` convention. Keep one symlink per skill; do not replace `.agents/skills/` with a directory symlink.
+
+On Windows, Git checks symlinks out as plain files when `core.symlinks` is false (the default). The per-skill link then does not work, but `.agents/skills/` remains a real directory, so other skills can still be installed there. To use the link, enable Developer Mode, set `git config core.symlinks true`, and re-checkout the file.
+
+Do not run `npx skills add` inside this repository; the Skills CLI may replace the link with a real directory. Test installs in a separate clone. If the link is replaced, remove the generated directory and restore it with `git checkout -- .agents/skills/python-coding-standards`.
+
 ## Versioning and releases
 
 Each skill is versioned independently with SemVer. The version lives in `metadata.version` in `skills/<name>/SKILL.md` and must be a quoted string. The version covers every file in the skill directory except the changelog history. The repository has no repository-wide version.
