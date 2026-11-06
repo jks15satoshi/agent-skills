@@ -5,7 +5,7 @@ compatibility: Requires Python 3.11+ and Ruff. uv is recommended.
 license: MIT
 metadata:
   author: jks15satoshi
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Python Coding Standards
@@ -73,7 +73,7 @@ For guidance to give users on where to put their rules, see [`references/custom-
 - `PGH003`/`PGH004` require codes on `type: ignore`/`noqa`; the reason is review guidance.
 - `D415` is ignored because it accepts only ASCII `.`, `?`, and `!`; terminal punctuation in non-English docstrings is review guidance.
 - `D417` checks only docstrings that contain an `Args` section; a public function without one can still be under-documented.
-- Attribute docstrings on data-class fields are not checked by Ruff; `Attributes:` is the portable default, and below-field docs are only an option for `@dataclass` when the project's tooling reads PEP 258 attribute docstrings.
+- Attribute docstrings on data-class fields are not checked by Ruff; per-field docs are preferred for `@dataclass` where tooling reads them, while `Attributes:` is the portable fallback for all three data-class types. Keep one style per project.
 - `PLC0415` enforces top-level imports; a function-level import needs `# noqa: PLC0415` with the circular/optional reason. Absolute imports are recommended, while intra-package relative imports are acceptable if consistent across the project; `TID252` is available for strict enforcement. `RUF022` sorts `__all__`, and `F401`/`F822` check re-exports in `__init__.py`.
 - `T20` bans `print`/`pprint`, and `S102`/`S307` ban every `eval`/`exec`; deliberate CLI output or trusted evaluation needs a coded `# noqa` with a reason. The logging facility can be stdlib `logging`, loguru, or structlog.
 - `S105`–`S107` catch common password patterns but not every token/key or personal data; the `tests/**` ignores for `S105`/`S106` are only for obvious dummy values.
@@ -90,11 +90,11 @@ Before finishing:
 - [ ] `requires-python` is declared and matches the version used for compatibility decisions.
 - [ ] Ruff configuration lives in the root `pyproject.toml`.
 - [ ] `ruff check` and `ruff format --check` pass on the affected files, using the runner chosen in Step 4.
-- [ ] Public names follow the Naming conventions in [`general-standards.md`](references/general-standards.md); one concept has one name and one action has one verb.
+- [ ] Public names follow the Naming conventions in [`general-standards.md`](references/general-standards.md); one concept has one name and one action has one verb; iterator functions use one generic form (`iter_*` or `iterate_*`) project-wide; semantic names (`stream_*`, etc.) take priority.
 - [ ] Exception handling follows [`general-standards.md`](references/general-standards.md): specific catches, no silent swallow, explicit ignores, no secrets in messages.
 - [ ] Typing follows [`general-standards.md`](references/general-standards.md): annotated signatures and class attributes, parameterized containers, PEP 695 only at 3.12+, typing-only imports/overloads behind `TYPE_CHECKING`, runtime consumers imported normally, coded suppressions.
-- [ ] Functions and data follow [`general-standards.md`](references/general-standards.md): one level of abstraction, keyword-only booleans, no mutable defaults, no `global`, boundary validation, frozen value objects, `Enum` for closed sets.
-- [ ] Docstrings follow [`general-standards.md`](references/general-standards.md): Google sections, Args order/defaults, `Attributes` or the optional `@dataclass` field docs, terminal punctuation.
+- [ ] Functions and data follow [`general-standards.md`](references/general-standards.md): one level of abstraction, single blank lines between major phases in longer functions, keyword-only booleans, no mutable defaults, no `global`, boundary validation, frozen value objects, `Enum` for closed sets.
+- [ ] Docstrings follow [`general-standards.md`](references/general-standards.md): Google sections, Args order/defaults, per-field data-class docs where supported or `Attributes`, one style per project, terminal punctuation.
 - [ ] Module organization follows [`general-standards.md`](references/general-standards.md): member order, public-before-private, consistent top-level imports (absolute preferred), `__all__` only in a re-exporting `__init__.py`.
 - [ ] Logging and security follow [`general-standards.md`](references/general-standards.md): a logging facility rather than `print`, no `eval`/`exec` on untrusted input, no real secrets or personal data in code, tests, examples, or docs.
 - [ ] Tests follow [`general-standards.md`](references/general-standards.md): behavior names, arrange-act-assert, one behavior, parameterized cases, specific exception assertions, isolation, regression test.

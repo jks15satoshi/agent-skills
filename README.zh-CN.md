@@ -6,9 +6,11 @@
 
 ## 技能
 
-| 技能 | 描述 |
-| --- | --- |
-| [`python-coding-standards`](skills/python-coding-standards/) | 使用 Ruff 和一套共享的现代 Python 规范来检查、格式化并审查 Python 代码。需要 Python 3.11+ 和 Ruff。 |
+| 技能 | 版本 | 描述 |
+| --- | --- | --- |
+| [`python-coding-standards`](skills/python-coding-standards/) | [1.1.0](skills/python-coding-standards/CHANGELOG.md) | 使用 Ruff 和一套共享的现代 Python 规范来检查、格式化并审查 Python 代码。需要 Python 3.11+ 和 Ruff。 |
+
+每个技能独立遵循 SemVer。点击版本查看该技能的变更日志；发布标签为 `<skill>-v<version>`。
 
 ## 安装
 
@@ -119,4 +121,6 @@ npx -y skills@latest add . --list
 
 ## 许可证
 
-本仓库采用 [MIT License](LICENSE) 许可。每个技能目录内也附带一份副本，以便单独安装技能时许可证随技能一起分发。如果某个技能使用不同的许可证，以该技能目录内的 `LICENSE` 文件为准。
+本仓库采用 [MIT License](LICENSE) 许可。
+
+每个技能目录内也附带一份副本，以便单独安装技能时许可证随技能一起分发。如果某个技能使用不同的许可证，以该技能目录内的 `LICENSE` 文件为准。
