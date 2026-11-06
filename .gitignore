@@ -9,6 +9,3 @@ venv/
 
 # OS
 .DS_Store
-
-# Local agent skill installs
-.agents/skills/*/
