@@ -16,17 +16,17 @@ Each skill follows SemVer independently. Select a version to read that skill's c
 
 ### Skills CLI
 
-Install with the [Skills CLI](https://github.com/vercel-labs/skills) (Node.js 22.20+). It detects installed clients and installs each skill into the right directory:
+Install with the [Skills CLI](https://github.com/vercel-labs/skills) (Node.js 22.20+). It detects installed clients and installs each skill into the right directory. `skill-name` in the installation and update examples is a placeholder for a skill name from the table above:
 
 ```bash
-# Install into the current project
-npx skills add jks15satoshi/agent-skills --skill python-coding-standards
-
-# Install globally
-npx skills add jks15satoshi/agent-skills --skill python-coding-standards -g
-
 # List the skills available in this repository
 npx skills add jks15satoshi/agent-skills --list
+
+# Install into the current project
+npx skills add jks15satoshi/agent-skills --skill skill-name
+
+# Install globally
+npx skills add jks15satoshi/agent-skills --skill skill-name -g
 ```
 
 Pass `-a <agent>` to target a specific client (and `-y` to skip confirmation prompts). Agent IDs and native skill directories are listed in the [supported agents](https://github.com/vercel-labs/skills/blob/main/docs/agents.md) table.
@@ -44,11 +44,11 @@ Copy a skill directory into a skills location your agent discovers. The cross-cl
 ```bash
 # From the cloned repository root: install for all projects
 mkdir -p ~/.agents/skills
-cp -R skills/python-coding-standards ~/.agents/skills/
+cp -R skills/skill-name ~/.agents/skills/
 
 # From your project: install for this project only
 mkdir -p .agents/skills
-cp -R /path/to/agent-skills/skills/python-coding-standards .agents/skills/
+cp -R /path/to/agent-skills/skills/skill-name .agents/skills/
 ```
 
 The `.agents/skills/` location is described in the [Agent Skills implementation guide](https://agentskills.io/client-implementation/adding-skills-support): skills installed there are visible to any client that scans it. If your client does not scan that path, use its native skills directory from the [supported agents](https://github.com/vercel-labs/skills/blob/main/docs/agents.md) table. The Skills CLI handles this automatically.
@@ -64,12 +64,12 @@ The Skills CLI records where each skill came from, so you can update in place:
 npx skills check
 
 # Update one skill, or every installed skill
-npx skills update <skill>
+npx skills update skill-name
 npx skills update
 
 # Limit the update to global or project scope
-npx skills update -g <skill>
-npx skills update -p <skill>
+npx skills update -g skill-name
+npx skills update -p skill-name
 ```
 
 `npx skills check` exits with a non-zero status when an update is available, so it can gate CI.
@@ -78,15 +78,15 @@ If you installed manually, update the clone and replace the skill directory:
 
 ```bash
 git -C /path/to/agent-skills pull
-rm -rf ~/.agents/skills/<skill>
-cp -R /path/to/agent-skills/skills/<skill> ~/.agents/skills/
+rm -rf ~/.agents/skills/skill-name
+cp -R /path/to/agent-skills/skills/skill-name ~/.agents/skills/
 ```
 
 To avoid repeating the copy, link the clone instead:
 
 ```bash
-ln -sfn /path/to/agent-skills/skills/<skill> \
-  ~/.agents/skills/<skill>
+ln -sfn /path/to/agent-skills/skills/skill-name \
+  ~/.agents/skills/skill-name
 ```
 
 Updates replace the skill directory. Keep any project-specific customizations outside the installed skill.

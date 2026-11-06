@@ -16,17 +16,17 @@
 
 ### Skills CLI
 
-使用 [Skills CLI](https://github.com/vercel-labs/skills) 安装（需要 Node.js 22.20+）。它会检测已安装的客户端，并把每个技能安装到正确的目录：
+使用 [Skills CLI](https://github.com/vercel-labs/skills) 安装（需要 Node.js 22.20+）。它会检测已安装的客户端，并把每个技能安装到正确的目录。安装和更新示例中的 `skill-name` 是占位符，请替换为上表中的技能名：
 
 ```bash
-# 安装到当前项目
-npx skills add jks15satoshi/agent-skills --skill python-coding-standards
-
-# 全局安装
-npx skills add jks15satoshi/agent-skills --skill python-coding-standards -g
-
 # 列出本仓库中可用的技能
 npx skills add jks15satoshi/agent-skills --list
+
+# 安装到当前项目
+npx skills add jks15satoshi/agent-skills --skill skill-name
+
+# 全局安装
+npx skills add jks15satoshi/agent-skills --skill skill-name -g
 ```
 
 使用 `-a <agent>` 指定客户端（并用 `-y` 跳过确认提示）。各客户端的 Agent ID 和原生技能目录见[支持的客户端](https://github.com/vercel-labs/skills/blob/main/docs/agents.md)表。
@@ -44,11 +44,11 @@ git clone https://github.com/jks15satoshi/agent-skills.git
 ```bash
 # 在克隆的仓库根目录执行：安装到所有项目
 mkdir -p ~/.agents/skills
-cp -R skills/python-coding-standards ~/.agents/skills/
+cp -R skills/skill-name ~/.agents/skills/
 
 # 在你的项目内执行：仅安装到当前项目
 mkdir -p .agents/skills
-cp -R /path/to/agent-skills/skills/python-coding-standards .agents/skills/
+cp -R /path/to/agent-skills/skills/skill-name .agents/skills/
 ```
 
 `.agents/skills/` 位置见 [Agent Skills 实现指南](https://agentskills.io/client-implementation/adding-skills-support)：安装到该目录的技能对任何扫描它的客户端可见。如果你的客户端不扫描该路径，请使用[支持的客户端](https://github.com/vercel-labs/skills/blob/main/docs/agents.md)表中它的原生技能目录。Skills CLI 会自动处理这一点。
@@ -64,12 +64,12 @@ Skills CLI 会记录每个技能的来源，可以直接原地更新：
 npx skills check
 
 # 更新指定技能或全部技能
-npx skills update <skill>
+npx skills update skill-name
 npx skills update
 
 # 限定全局或项目范围
-npx skills update -g <skill>
-npx skills update -p <skill>
+npx skills update -g skill-name
+npx skills update -p skill-name
 ```
 
 `npx skills check` 发现更新时会返回非零退出码，可用于 CI。
@@ -78,15 +78,15 @@ npx skills update -p <skill>
 
 ```bash
 git -C /path/to/agent-skills pull
-rm -rf ~/.agents/skills/<skill>
-cp -R /path/to/agent-skills/skills/<skill> ~/.agents/skills/
+rm -rf ~/.agents/skills/skill-name
+cp -R /path/to/agent-skills/skills/skill-name ~/.agents/skills/
 ```
 
 如果不想每次复制，可以改成符号链接：
 
 ```bash
-ln -sfn /path/to/agent-skills/skills/<skill> \
-  ~/.agents/skills/<skill>
+ln -sfn /path/to/agent-skills/skills/skill-name \
+  ~/.agents/skills/skill-name
 ```
 
 更新只会替换技能目录。项目自定义内容应放在项目内，不要放进已安装的 skill。
