@@ -23,7 +23,7 @@ These are the shared standards. Rules with a Ruff code are enforced by the confi
 
 ## Naming
 
-PEP 8 covers casing; these defaults cover the semantic choices Ruff cannot check. Follow the project's established names when they differ, and record project-specific deviations in [`project-specific-standards.md`](project-specific-standards.md).
+PEP 8 covers casing; these defaults cover the semantic choices Ruff cannot check. Follow the project's established names when they differ, and record project-specific deviations in the project's own standards documentation.
 
 ### Vocabulary and Consistency
 - Use one name for one concept and one verb for one action in the project's vocabulary, especially in public APIs (`sync_fetch`/`async_fetch`). Do not mix `user`/`account`, `fetch`/`load`, or `config`/`cfg`.
@@ -132,7 +132,7 @@ for group in groups:
 ### Data Modeling
 - Validate external input once at the boundary with the project's validation mechanism (for example, pydantic), then pass typed data internally; do not re-validate the same input in inner functions. Use a dataclass, `TypedDict`, or `NamedTuple` for structured internal data, not a bare `dict` or `tuple`.
 - Model immutable value objects with `@dataclass(frozen=True, slots=True)`; use `tuple`/`frozenset` for sequence and set fields, and omit `slots=True` when the object needs `__dict__`, weak references, or a specific pickling/ORM contract.
-- For a value object's mapping field, use the built-in `frozendict` on Python 3.15+, or a maintained immutable mapping implementation (third-party or custom) on earlier versions; record the choice in [`project-specific-standards.md`](project-specific-standards.md). `MappingProxyType` is a read-only view, not a `frozendict` equivalent: it is unhashable and reflects mutations of the wrapped mapping, so it does not satisfy deep immutability.
+- For a value object's mapping field, use the built-in `frozendict` on Python 3.15+, or a maintained immutable mapping implementation (third-party or custom) on earlier versions; record the choice in the project's own standards documentation. `MappingProxyType` is a read-only view, not a `frozendict` equivalent: it is unhashable and reflects mutations of the wrapped mapping, so it does not satisfy deep immutability.
 - Use timezone-aware datetimes: `datetime.now(UTC)` or `datetime.now(timezone.utc)`, never `utcnow()` or a naive `now()`. Parse and store in UTC, convert at the edges (`DTZ`).
 - Validate invariants in `__post_init__` or a validator; keep constructors free of I/O and expensive recomputation.
 - Use `Enum` for a closed set of named values. Replace a class that only holds static methods with module-level functions, unless a framework requires the class.

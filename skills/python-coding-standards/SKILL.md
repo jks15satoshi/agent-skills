@@ -18,7 +18,7 @@ The shared Ruff rule set and the project's declared minimum Python version are t
 
 - [ ] Step 1: Determine the minimum supported Python version. Read [`references/version-compatibility.md`](references/version-compatibility.md) for the detection order. If no floor is declared, ask; do not guess.
 - [ ] Step 2: Merge [`assets/pyproject.ruff-template.toml`](assets/pyproject.ruff-template.toml) into the root `pyproject.toml` without overwriting existing project configuration. Read [`references/ruff-config.md`](references/ruff-config.md) before changing existing Ruff settings.
-- [ ] Step 3: Write code that runs on the minimum version and follows the general standards. Read [`references/general-standards.md`](references/general-standards.md); for syntax and standard-library availability, read [`references/version-compatibility.md`](references/version-compatibility.md). If the task touches a project-specific library, framework, or internal API, read [`references/project-specific-standards.md`](references/project-specific-standards.md).
+- [ ] Step 3: Write code that runs on the minimum version and follows the general standards. Read [`references/general-standards.md`](references/general-standards.md); for syntax and standard-library availability, read [`references/version-compatibility.md`](references/version-compatibility.md). If the task touches a project-specific library, framework, internal API, or convention, read the project's custom standards when they are available (see [`references/custom-standards.md`](references/custom-standards.md)).
 - [ ] Step 4: Run Ruff and fix violations — see the commands below.
 - [ ] Step 5: Verify the supported version range. Read [`references/version-compatibility.md`](references/version-compatibility.md) for the test matrix.
 
@@ -45,6 +45,14 @@ uv run ruff format --check .
 ```
 
 Fix violations in the code rather than suppressing them. When a suppression is unavoidable, use a rule code and a reason. Review fixes before accepting them; never use `--unsafe-fixes` without manual inspection.
+
+## Project-Specific Standards
+
+The shared standards are defaults. When a project provides custom Python rules — in `AGENTS.md`, an existing standards document, a dedicated file, client-specific rule files, or any file the user names — read them before proposing changes and apply them where they differ from the shared defaults. Do not require a specific file name, section layout, or format.
+
+Project rules take precedence over the shared defaults. If a rule weakens a safety rule, flag the conflict and ask before applying it. Never write project rules into the installed skill directory. If no custom standards are available, use the shared defaults; do not create a standards file unless the user asks.
+
+For guidance to give users on where to put their rules, see [`references/custom-standards.md`](references/custom-standards.md).
 
 ## Gotchas
 
@@ -93,6 +101,7 @@ Before finishing:
 - [ ] Async, date/time, and text I/O follow [`general-standards.md`](references/general-standards.md): no blocking calls in async, timezone-aware datetimes, explicit `encoding=` below 3.15.
 - [ ] Tests pass on the minimum and maximum supported versions.
 - [ ] Any suppression has a rule code and a reason.
+- [ ] Custom project standards, when provided, were read and applied; no project rules were written into the skill directory.
 
 ## References
 
@@ -101,5 +110,5 @@ Before finishing:
 | [`general-standards.md`](references/general-standards.md) | module organization, comprehensions, naming, type annotations, functions and data, docstrings, exception handling, testing, security and logging | writing or reviewing code, or naming new APIs |
 | [`version-compatibility.md`](references/version-compatibility.md) | support matrix, baseline detection, compatibility patterns, end of life | choosing syntax or APIs, or setting the floor |
 | [`ruff-config.md`](references/ruff-config.md) | rule set map, target version, per-file ignores, template adoption | configuring or troubleshooting Ruff |
-| [`project-specific-standards.md`](references/project-specific-standards.md) | placeholder for project-specific conventions; add the project's rules here | a task touches a project-specific library, framework, or internal API |
+| [`custom-standards.md`](references/custom-standards.md) | how projects can provide custom Python standards; no required path, format, or layout | a project has custom rules, or the user asks how to configure them |
 | [`pyproject.ruff-template.toml`](assets/pyproject.ruff-template.toml) | canonical Ruff rule set | merging or reviewing configuration |
