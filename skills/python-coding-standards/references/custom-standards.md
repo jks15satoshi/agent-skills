@@ -1,6 +1,6 @@
 # Custom Project Standards
 
-This skill ships shared defaults. A project may define its own Python rules in any form and location. There is no required file name, format, or section layout.
+This skill ships shared defaults. A project may define its own Python rules in any form and location. There is no required file name, format, or section layout: prose, bullets, a table, or a link to an internal page all work.
 
 **Do not add project rules to this file.** This file is guidance only; keep the rules in the project, outside the installed skill directory.
 
@@ -17,13 +17,7 @@ These are examples, not requirements.
 
 ## How to make the rules discoverable
 
-Mention the file in your request, or point to it from `AGENTS.md`:
-
-```text
-Python standards: path/to/file.md
-```
-
-The content can be prose, bullets, a table, or a link to an internal page.
+If the rules are in `AGENTS.md`, no additional step is needed. If they are in a separate file, reference that file from `AGENTS.md`, or point to the file explicitly in the request.
 
 ## How the agent applies them
 
